@@ -68,7 +68,7 @@ def save_file(res):
 
                         wr.writerow([j, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
                 
-                ctypes.windll.user32.MessageBoxW(0, "File saved successfully:\n{}".format(file_name), "File Saved", 0)
+                ctypes.windll.user32.MessageBoxW(0, "File saved successfully:\n{}".format(fn), "File Saved", 0)
         except Exception as e:
             ctypes.windll.user32.MessageBoxW(0, "Error saving file:\n{}".format(str(e)), "Error", 0)
 
