@@ -1,3 +1,4 @@
+import sys
 import requests
 import json
 import time
@@ -17,7 +18,7 @@ def wait_sec(ms):
             if a != None:
                 break
     except KeyboardInterrupt:
-        exit(0)
+        sys.exit(0)
 
 def previous_month():
     current = date.today()

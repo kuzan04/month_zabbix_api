@@ -1,11 +1,11 @@
 import os
+import sys
 import json
 from dotenv import load_dotenv
 from connect import Env
 from call import select_group, select_host
-from reports import save_file
+from report import save_file
 
-load_dotenv()
 
 def choose(m, e, s):
     match s:
@@ -32,16 +32,28 @@ def call(m, e):
     print("(1)\t: Find all device in zabbix")
     print("(2)\t: Get report all device in zabbix [404]")
     result = input("Press the value (Ctrl+C or Press Enter to exit): ")
-    if result != "":
-        return choose(m, e, int(result))
-    else:
-        exit(1)
+    try:
+        if result != "":
+            return choose(m, e, int(result))
+        else:
+            sys.exit(0)
+    except KeyboardInterrupt:
+        sys.exit(0)
 #
 if __name__ == "__main__":
+    # Handle case where script runs as a bundled .exe
+    try:
+        base_path = sys._MEIPASS  # Extracted PyInstaller directory
+    except Exception:
+        base_path = os.path.abspath(".")
+    # Load the .env file from the correct location
+    env_path = os.path.join(base_path, ".env")
+    load_dotenv(env_path)
+
     w = "Welcome to script create reports from Zabbix (1 Month only)"
     env = Env(os.getenv('ZABBIX_USER'), os.getenv('ZABBIX_PASSWORD'), os.getenv('ZABBIX_URI'))
     env.auth_token()
     try:
         call(w, env)
     except KeyboardInterrupt:
-        pass
+        sys.exit(0)

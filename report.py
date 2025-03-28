@@ -1,5 +1,6 @@
 import tkinter as tk
 import csv
+from sys import platform
 import time
 import ctypes
 from statistics import mean
@@ -68,9 +69,13 @@ def save_file(res):
 
                         wr.writerow([j, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
                 
+            if platform == "win32":
                 ctypes.windll.user32.MessageBoxW(0, "File saved successfully:\n{}".format(fn), "File Saved", 0)
         except Exception as e:
-            ctypes.windll.user32.MessageBoxW(0, "Error saving file:\n{}".format(str(e)), "Error", 0)
+            if platform == "win32":
+                ctypes.windll.user32.MessageBoxW(0, "Error saving file:\n{}".format(str(e)), "Error", 0)
+            else:
+                pass
 
     root.destroy()
 

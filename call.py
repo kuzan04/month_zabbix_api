@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import threading
 from connect import Env
@@ -23,7 +24,7 @@ def select_group(m, e, lg):
     s = input("Press the value (Ctrl+C or Press Enter to exit || Press ',' to multiple select): ")
     try:
         if s == "":
-            exit(1)
+            sys.exit(0)
         elif s == "b":
             return s
         elif s == "a":
@@ -37,7 +38,7 @@ def select_group(m, e, lg):
         else:
             return select_host(m, e, lg[int(s)]['groupid'], lg)
     except:
-        exit(0)
+        sys.exit(0)
 #
 def select_host(m, e, sg, lg):
     clear_screen()
@@ -51,7 +52,7 @@ def select_host(m, e, sg, lg):
     s = input("Press the value (Ctrl+C or Press Enter to exit || Press ',' to multiple select): ")
     try:
         if s == "":
-            exit(1)
+            sys.exit(0)
         elif s == "b":
             return s
         elif s == "b1":
@@ -65,7 +66,7 @@ def select_host(m, e, sg, lg):
         else:
             return list_items(m, e, ah[int(s)]["hostid"], ah[int(s)]["name"])
     except:
-        exit(0)
+        sys.exit(0)
 #
 def list_items(m, e, sh, h):
     clear_screen()
@@ -89,4 +90,4 @@ def list_items(m, e, sh, h):
                 host_dirc[h[i]] = {"cpu_util":cpu, "memory_util":memory}
             return h, host_dirc
     except Exception as e:
-        exit(0)
+        sys.exit(1)
