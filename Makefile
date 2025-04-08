@@ -9,9 +9,9 @@ install:
 	pip install dotenv statistics requests python-dateutil pyinstaller
 
 w-builds:
-	pyinstaller --onefile --windowed --name="report-zabbix" --icon=icons/myicon.ico --version-file="version.txt" --hidden-import=dotenv --add-data=".env;." main.py
+	pyinstaller --onefile --name="report-zabbix" --icon=icons/myicon.ico --version-file="version.txt" --hidden-import=dotenv --add-data=".env;." main.py
 builds:
-	pyinstaller --onefile --windowed --name="report-zabbix" --version-file="version.txt" --hidden-import=dotenv --add-data=".env:." main.py
+	pyinstaller --onefile --name="report-zabbix" --version-file="version.txt" --hidden-import=dotenv --add-data=".env:." main.py
 	#--icon=icons/myicon.ico
 
 disable:
