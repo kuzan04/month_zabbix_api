@@ -73,8 +73,12 @@ def list_items(m, e, sh, h):
     print(m)
     try:
         if not isinstance(sh, list) and not isinstance(h, list):
-            si1 = e.get_cpu_items(sh)['result'][0]['itemid']
-            si2 = e.get_memory_items(sh)['result'][0]['itemid']
+            si1 = e.get_cpu_items(sh)['result'][0]
+            if len(si1) != 0:
+                si1 = si1['itemid']
+            si2 = e.get_memory_items(sh)['result'][0]
+            if len(si2) != 0:
+                si2 = si2['itemid']
             cpu = e.get_cpu_data(si1)['result']
             memory = e.get_memory_data(si2)['result']
             print(f"{h} get datas susccess!")
@@ -82,12 +86,22 @@ def list_items(m, e, sh, h):
         else:
             host_dirc = {i: {} for i in h}
             for i in range(int((len(sh) + len(h))/2)):
-                si1 = e.get_cpu_items(sh[i])['result'][0]['itemid']
-                si2 = e.get_memory_items(sh[i])['result'][0]['itemid']
-                cpu  = e.get_cpu_data(si1)['result']
-                memory  = e.get_memory_data(si2)['result']
-                print(f"{h[i]} get datas susccess!")
-                host_dirc[h[i]] = {"cpu_util":cpu, "memory_util":memory}
+                si1 = e.get_cpu_items(sh[i])['result']
+                si2 = e.get_memory_items(sh[i])['result']
+                if len(si1) != 0 and len(si2) !=0 :
+                    si1 = si1[0]['itemid']
+                    si2 = si2[0]['itemid']
+                    cpu  = e.get_cpu_data(si1)['result']
+                    memory  = e.get_memory_data(si2)['result']
+                    if len(cpu) == 0 and len(memory) == 0:
+                        print(f"{h[i]} not have datas... [SNMP: Disable]")
+                    else:
+                        print(f"{h[i]} get datas susccess!")
+                    host_dirc[h[i]] = {"cpu_util":cpu, "memory_util":memory}
+                else:
+                    print(f"{h[i]} not have datas... [SNMP: Disable and Not have about cpu & memory]")
+                    host_dirc[h[i]] = {"cpu_util":[], "memory_util":[]}
+
             return h, host_dirc
     except Exception as e:
-        sys.exit(1)
+        sys.exit(0)

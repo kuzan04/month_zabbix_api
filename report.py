@@ -37,37 +37,40 @@ def save_file(res):
                 wr.writerow(fi)
                 # Write row other.
                 if not isinstance(h, list):
-                    # CPU
-                    mn = []; avg =[]; mx = []
-                    for i in range(len(r[h]['cpu_util'])):
-                        mn.append("%.2f" % round(float(r[h]['cpu_util'][i]['value_min']), 2))
-                        avg.append(r[h]['cpu_util'][i]['value_avg'])
-                        mx.append("%.2f" % round(float(r[h]['cpu_util'][i]['value_max']), 2))
-                    #Memory
-                    mmn =[]; mavg =[]; mmx =[]
-                    for i in range(len(r[h]['memory_util'])):
-                        mmn.append("%.2f" % round(float(r[h]['memory_util'][i]['value_min']), 2))
-                        mavg.append(r[h]['memory_util'][i]['value_avg'])
-                        mmx.append("%.2f" % round(float(r[h]['memory_util'][i]['value_max']), 2))
+                    if len(r[h]['cpu_util']) != 0 or len(r[h]['memory_util']) != 0:
+                        # CPU
+                        mn = []; avg = []; mx = []
+                        for i in range(len(r[h]['cpu_util'])):
+                            mn.append("%.2f" % round(float(r[h]['cpu_util'][i]['value_min']), 2))
+                            avg.append(r[h]['cpu_util'][i]['value_avg'])
+                            mx.append("%.2f" % round(float(r[h]['cpu_util'][i]['value_max']), 2))
+                        #Memory
+                        mmn = []; mavg = []; mmx =[]
+                        for i in range(len(r[h]['memory_util'])):
+                            mmn.append("%.2f" % round(float(r[h]['memory_util'][i]['value_min']), 2))
+                            mavg.append(r[h]['memory_util'][i]['value_avg'])
+                            mmx.append("%.2f" % round(float(r[h]['memory_util'][i]['value_max']), 2))
 
-                    s, e = previous_month()
-                    wr.writerow([h, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
+                        s, e = previous_month()
+                        wr.writerow([h, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
                 else:
                     s, e = previous_month()
                     for j in h:
-                        mn = []; avg =[]; mx = [];
-                        for i in range(len(r[j]['cpu_util'])):
-                            mn.append("%.2f" % round(float(r[j]['cpu_util'][i]['value_min']), 2))
-                            avg.append(r[j]['cpu_util'][i]['value_avg'])
-                            mx.append("%.2f" % round(float(r[j]['cpu_util'][i]['value_max']), 2))
-                        #Memory
-                        mmn =[]; mavg =[]; mmx =[]
-                        for i in range(len(r[j]['memory_util'])):
-                            mmn.append("%.2f" % round(float(r[j]['memory_util'][i]['value_min']), 2))
-                            mavg.append(r[j]['memory_util'][i]['value_avg'])
-                            mmx.append("%.2f" % round(float(r[j]['memory_util'][i]['value_max']), 2))
+                        if len(r[j]['cpu_util']) != 0 or len(r[j]['memory_util']) != 0:
+                            #CPU
+                            mn = []; avg = []; mx = [];
+                            for i in range(len(r[j]['cpu_util'])):
+                                mn.append("%.2f" % round(float(r[j]['cpu_util'][i]['value_min']), 2))
+                                avg.append(r[j]['cpu_util'][i]['value_avg'])
+                                mx.append("%.2f" % round(float(r[j]['cpu_util'][i]['value_max']), 2))
+                            #Memory
+                            mmn = []; mavg = []; mmx = [];
+                            for i in range(len(r[j]['memory_util'])):
+                                mmn.append("%.2f" % round(float(r[j]['memory_util'][i]['value_min']), 2))
+                                mavg.append(r[j]['memory_util'][i]['value_avg'])
+                                mmx.append("%.2f" % round(float(r[j]['memory_util'][i]['value_max']), 2))
 
-                        wr.writerow([j, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
+                            wr.writerow([j, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
                 
             if platform == "win32":
                 ctypes.windll.user32.MessageBoxW(0, "File saved successfully:\n{}".format(fn), "File Saved", 0)
@@ -75,10 +78,10 @@ def save_file(res):
             if platform == "win32":
                 ctypes.windll.user32.MessageBoxW(0, "Error saving file:\n{}".format(str(e)), "Error", 0)
             else:
-                pass
+                print(e)
 
     root.destroy()
 
-    print("Generate file csv success!\n5 seconds back to first page...", end="")
-    time.sleep(5)
+    print("Generate file csv success!\n3 seconds back to first page...", end="")
+    time.sleep(3)
     return 1
