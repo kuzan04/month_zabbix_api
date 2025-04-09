@@ -44,34 +44,26 @@ def save_file(res):
                 if not isinstance(h, list):
                     if len(r[h]['cpu_util']) != 0 or len(r[h]['memory_util']) != 0:
                         # CPU
-                        mn = []; avg = []; mx = []
-                        for i in range(len(r[h]['cpu_util'])):
-                            mn.append("%.2f" % round(float(r[h]['cpu_util'][i]['value_min']), 2))
-                            avg.append(r[h]['cpu_util'][i]['value_avg'])
-                            mx.append("%.2f" % round(float(r[h]['cpu_util'][i]['value_max']), 2))
-                        #Memory
-                        mmn = []; mavg = []; mmx =[]
-                        for i in range(len(r[h]['memory_util'])):
-                            mmn.append("%.2f" % round(float(r[h]['memory_util'][i]['value_min']), 2))
-                            mavg.append(r[h]['memory_util'][i]['value_avg'])
-                            mmx.append("%.2f" % round(float(r[h]['memory_util'][i]['value_max']), 2))
+                        mn = [float("%.2f" % round(float(i['value_min']), 2)) for i in r[h]['cpu_util'] if float(i['value_min']) > 1]
+                        avg = [float("%.2f" % round(float(i['value_avg']), 2)) for i in r[h]['cpu_util'] if float(i['value_avg']) > 1]
+                        mx = [float("%.2f" % round(float(i['value_max']), 2)) for i in r[h]['cpu_util'] if float(i['value_max']) > 1]
+                        # Memory
+                        mmn = [float("%.2f" % round(float(i['value_min']), 2)) for i in r[h]['memory_util'] if float(i['value_min']) > 1]
+                        mavg = [float("%.2f" % round(float(i['value_avg']), 2)) for i in r[h]['memory_util'] if float(i['value_avg']) > 1]
+                        mmx = [float("%.2f" % round(float(i['value_max']), 2)) for i in r[h]['memory_util'] if float(i['value_max']) > 1]
 
                         wr.writerow([h, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
                 else:
                     for j in h:
                         if len(r[j]['cpu_util']) != 0 or len(r[j]['memory_util']) != 0:
-                            #CPU
-                            mn = []; avg = []; mx = [];
-                            for i in range(len(r[j]['cpu_util'])):
-                                mn.append("%.2f" % round(float(r[j]['cpu_util'][i]['value_min']), 2))
-                                avg.append(r[j]['cpu_util'][i]['value_avg'])
-                                mx.append("%.2f" % round(float(r[j]['cpu_util'][i]['value_max']), 2))
-                            #Memory
-                            mmn = []; mavg = []; mmx = [];
-                            for i in range(len(r[j]['memory_util'])):
-                                mmn.append("%.2f" % round(float(r[j]['memory_util'][i]['value_min']), 2))
-                                mavg.append(r[j]['memory_util'][i]['value_avg'])
-                                mmx.append("%.2f" % round(float(r[j]['memory_util'][i]['value_max']), 2))
+                            # CPU
+                            mn = [float("%.2f" % round(float(i['value_min']), 2)) for i in r[j]['cpu_util'] if float(i['value_min']) > 1]
+                            avg = [float("%.2f" % round(float(i['value_avg']), 2)) for i in r[j]['cpu_util'] if float(i['value_avg']) > 1]
+                            mx = [float("%.2f" % round(float(i['value_max']), 2)) for i in r[j]['cpu_util'] if float(i['value_max']) > 1]
+                            # Memory
+                            mmn = [float("%.2f" % round(float(i['value_min']), 2)) for i in r[j]['memory_util'] if float(i['value_min']) > 1]
+                            mavg = [float("%.2f" % round(float(i['value_avg']), 2)) for i in r[j]['memory_util'] if float(i['value_avg']) > 1]
+                            mmx = [float("%.2f" % round(float(i['value_max']), 2)) for i in r[j]['memory_util'] if float(i['value_max']) > 1]
 
                             wr.writerow([j, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
                 

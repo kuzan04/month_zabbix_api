@@ -41,7 +41,6 @@ class Env:
                 "password": self.password
             },
             "id": 1,
-            "auth": None
         }
 
         headers = {"Content-Type": "application/json"}
@@ -190,11 +189,8 @@ class Env:
             "jsonrpc": "2.0",
             "method": "user.logout",
             "params": [],
-            "id": 1 
+            "id": 1,
         }
 
-        headers = {"Content-Type", "application/json"}
-        response = requests.post(self.uri, data=json.dumps(payload), headers=headers)
-        if response != None:
-            LOG.put(1)
-        return response.json()
+        headers = {"Content-Type": "application/json"}
+        _ = requests.post(self.uri, data=json.dumps(payload), headers=headers)
