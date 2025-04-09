@@ -12,7 +12,6 @@ from connect import previous_month
 def save_file(res):
     h, r = res
 
-    print(h)
     # Date time now.
     now = datetime.now()
     t = now.strftime("%Y-%m-%dT%H%M%S")
