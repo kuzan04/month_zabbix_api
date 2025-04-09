@@ -116,10 +116,16 @@ def list_items(m, e, sh, h):
                         host_dirc.update({h[i]: {"cpu_util":[], "memory_util":[]}})
                     elif len(ra1) != 1 and len(ra2) != 1:
                         for j in range((len(ra1)+len(ra2))//2):
-                            host_dirc.update({f"{h[i]} (Stack{j+1})": 
-                                       {"cpu_util": [k for k in cpu if k['itemid'] == ra1[j]],
-                                        "memory_util": [k for k in memory if k['itemid'] == ra2[j]]}
-                                       })
+                            if "Border" in h[i] or ("DR" in h[i] and "Core" in h[i]):
+                                host_dirc.update({f"{h[i]} (Resource{j+1})": 
+                                                  {"cpu_util": [k for k in cpu if k['itemid'] == ra1[j]],
+                                                   "memory_util": [k for k in memory if k['itemid'] == ra2[j]]}
+                                                  })
+                            else:
+                                host_dirc.update({f"{h[i]} (Stack{j+1})": 
+                                                  {"cpu_util": [k for k in cpu if k['itemid'] == ra1[j]],
+                                                   "memory_util": [k for k in memory if k['itemid'] == ra2[j]]}
+                                                  })
                         print(f"{h[i]} get datas susccess!")
                         
                     else:
