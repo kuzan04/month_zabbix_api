@@ -38,6 +38,7 @@ def select_group(m, e, lg):
         else:
             return select_host(m, e, lg[int(s)]['groupid'], lg)
     except:
+        e.logout()
         sys.exit(0)
 #
 def select_host(m, e, sg, lg):
@@ -66,6 +67,7 @@ def select_host(m, e, sg, lg):
         else:
             return list_items(m, e, ah[int(s)]["hostid"], ah[int(s)]["name"])
     except:
+        e.logout()
         sys.exit(0)
 #
 def list_items(m, e, sh, h):
@@ -73,35 +75,62 @@ def list_items(m, e, sh, h):
     print(m)
     try:
         if not isinstance(sh, list) and not isinstance(h, list):
-            si1 = e.get_cpu_items(sh)['result'][0]
-            if len(si1) != 0:
-                si1 = si1['itemid']
-            si2 = e.get_memory_items(sh)['result'][0]
-            if len(si2) != 0:
-                si2 = si2['itemid']
-            cpu = e.get_cpu_data(si1)['result']
-            memory = e.get_memory_data(si2)['result']
-            print(f"{h} get datas susccess!")
-            return h, {h: {"cpu_util":cpu, "memory_util":memory}}
+            si1 = e.get_cpu_items(sh)['result']
+            si2 = e.get_memory_items(sh)['result']
+            if len(si1) != 0 and len(si2) != 0:
+                si1 = [i['itemid'] for i in si1]
+                si2 = [i['itemid'] for i in si2]
+                cpu = e.get_cpu_data(si1)['result']
+                memory = e.get_memory_data(si2)['result']
+                ra1 = list(dict.fromkeys([i['itemid'] for i in cpu]))
+                ra2 = list(dict.fromkeys([i['itemid'] for i in memory]))
+                if len(ra1) != 1 and len(ra2) != 1:
+                    gh = {};
+                    for i in range((len(ra1) + len(ra2))//2):
+                        gh.update({f"{h} (Stack{i+1})": 
+                                   {"cpu_util": [j for j in cpu if j['itemid'] == ra1[i]],
+                                   "memory_util": [j for j in memory if j['itemid'] == ra2[i]]}
+                                   })
+                    print(f"{h} get datas susccess!")
+                    return list(gh.keys()), gh
+                else:
+                    print(f"{h} get datas susccess!")
+                    return h, {h: {"cpu_util":cpu, "memory_util":memory}}
+            else:
+                print(f"{h} not have datas... [SNMP: Disable and Not have about cpu & memory]")
+                return h, {h: {"cpu_util":[], "memory_util":[]}}
         else:
-            host_dirc = {i: {} for i in h}
-            for i in range(int((len(sh) + len(h))/2)):
+            host_dirc = {}
+            for i in range((len(sh) + len(h))//2):
                 si1 = e.get_cpu_items(sh[i])['result']
                 si2 = e.get_memory_items(sh[i])['result']
-                if len(si1) != 0 and len(si2) !=0 :
-                    si1 = si1[0]['itemid']
-                    si2 = si2[0]['itemid']
+                si1 = [j['itemid'] for j in si1]
+                si2 = [j['itemid'] for j in si2]
+                if len(si1) != 0 and len(si2) != 0:
                     cpu  = e.get_cpu_data(si1)['result']
                     memory  = e.get_memory_data(si2)['result']
+                    ra1 = list(dict.fromkeys([i['itemid'] for i in cpu]))
+                    ra2 = list(dict.fromkeys([i['itemid'] for i in memory]))
                     if len(cpu) == 0 and len(memory) == 0:
                         print(f"{h[i]} not have datas... [SNMP: Disable]")
+                        host_dirc.update({h[i]: {"cpu_util":[], "memory_util":[]}})
+                    elif len(ra1) != 1 and len(ra2) != 1:
+                        for j in range((len(ra1)+len(ra2))//2):
+                            host_dirc.update({f"{h[i]} (Stack{j+1})": 
+                                       {"cpu_util": [k for k in cpu if k['itemid'] == ra1[j]],
+                                        "memory_util": [k for k in memory if k['itemid'] == ra2[j]]}
+                                       })
+                        print(f"{h[i]} get datas susccess!")
+                        
                     else:
                         print(f"{h[i]} get datas susccess!")
-                    host_dirc[h[i]] = {"cpu_util":cpu, "memory_util":memory}
+                        host_dirc.update({h[i]: {"cpu_util":cpu, "memory_util":memory}})
                 else:
                     print(f"{h[i]} not have datas... [SNMP: Disable and Not have about cpu & memory]")
-                    host_dirc[h[i]] = {"cpu_util":[], "memory_util":[]}
+                    host_dirc.update({h[i]: {"cpu_util":[], "memory_util":[]}})
 
-            return h, host_dirc
-    except Exception as e:
+            return list(host_dirc.keys()), host_dirc
+    except Exception as err:
+        print(err)
+        e.logout()
         sys.exit(0)

@@ -143,7 +143,7 @@ class Env:
                 "time_till": e,    # End time (Unix timestamp)
                 "sortfield": "clock",
                 "sortorder": "ASC",
-                "output": ["clock", "value_avg", "value_min", "value_max"]  # Get timestamp and value
+                "output": ["itemid", "clock", "value_avg", "value_min", "value_max"]  # Get timestamp and value
             },
             "auth": self.auth,
             "id": 6
@@ -171,7 +171,7 @@ class Env:
                 "time_till": e,    # End time (Unix timestamp)
                 "sortfield": "clock",
                 "sortorder": "ASC",
-                "output": ["clock", "value_avg", "value_min", "value_max"]  # Get timestamp and value
+                "output": ["itemid", "clock", "value_avg", "value_min", "value_max"]  # Get timestamp and value
             },
             "auth": self.auth,
             "id": 7
@@ -182,4 +182,19 @@ class Env:
         if response != None:
             LOG.put(1)
 
+        return response.json()
+
+    #
+    def logout(self):
+        payload = {
+            "jsonrpc": "2.0",
+            "method": "user.logout",
+            "params": [],
+            "id": 1 
+        }
+
+        headers = {"Content-Type", "application/json"}
+        response = requests.post(self.uri, data=json.dumps(payload), headers=headers)
+        if response != None:
+            LOG.put(1)
         return response.json()

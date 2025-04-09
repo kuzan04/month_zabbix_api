@@ -8,20 +8,24 @@ from report import save_file
 
 
 def choose(m, e, s):
-    match s:
-        case 1:
-            # Query group
-            groups = e.list_groups()['result']
-            # Page1 - Select Group
-            g = select_group(m, e, groups)
-            # Re-call first page.
-            if g == "b":
-                return call(m, e)
-            # Generate Reports.
-            if save_file(g) == 1:
-                return call(m, e)
-        case 2:
-            print("(Hold) Today 2025-03-26 15:12 Fuction this not success.")
+    try:
+        match s:
+            case 1:
+                # Query group
+                groups = e.list_groups()['result']
+                # Page1 - Select Group
+                g = select_group(m, e, groups)
+                # Re-call first page.
+                if g == "b":
+                    return call(m, e)
+                # Generate Reports.
+                if save_file(g) == 1:
+                    return call(m, e)
+            case 2:
+                print("(Hold) Today 2025-03-26 15:12 Fuction this not success.")
+    except Exception:
+        e.logout()
+        sys.exit(0)
 #
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -36,8 +40,10 @@ def call(m, e):
         if result != "":
             return choose(m, e, int(result))
         else:
+            e.logout()
             sys.exit(0)
-    except KeyboardInterrupt:
+    except Exception:
+        e.logout()
         sys.exit(0)
 #
 if __name__ == "__main__":
@@ -56,4 +62,5 @@ if __name__ == "__main__":
     try:
         call(w, env)
     except KeyboardInterrupt:
+        env.logout()
         sys.exit(0)

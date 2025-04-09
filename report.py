@@ -11,6 +11,8 @@ from connect import previous_month
 
 def save_file(res):
     h, r = res
+
+    print(h)
     # Date time now.
     now = datetime.now()
     t = now.strftime("%Y-%m-%dT%H%M%S")
@@ -35,6 +37,10 @@ def save_file(res):
 
                 # Write header in file.
                 wr.writerow(fi)
+
+                # Set Date.
+                s, e = previous_month()
+
                 # Write row other.
                 if not isinstance(h, list):
                     if len(r[h]['cpu_util']) != 0 or len(r[h]['memory_util']) != 0:
@@ -51,10 +57,8 @@ def save_file(res):
                             mavg.append(r[h]['memory_util'][i]['value_avg'])
                             mmx.append("%.2f" % round(float(r[h]['memory_util'][i]['value_max']), 2))
 
-                        s, e = previous_month()
                         wr.writerow([h, s, e, min(mn), "%.2f" % round(mean(list(map(float, avg))), 2), max(mx), min(mmn), "%.2f" % round(mean(list(map(float, mavg))), 2), max(mmx)])
                 else:
-                    s, e = previous_month()
                     for j in h:
                         if len(r[j]['cpu_util']) != 0 or len(r[j]['memory_util']) != 0:
                             #CPU
