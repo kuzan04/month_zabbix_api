@@ -1,0 +1,5 @@
+dotenv
+statistics
+requests
+python-dateutil
+pyinstaller
